@@ -1,29 +1,27 @@
+import requests
+from dotenv import load_dotenv
+import os
+from urllib.parse import urlparse, parse_qs
+from dateutil.parser import parse
+from datetime import timedelta
+import time
+import pytz
+
+
 # URL of event you want to sign up to
-event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=65&spilletid=20230207T15:00:00&lang=no'
-
-
-
+event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=3&spilletid=20230206T15:00:00&lang=no'
 
 
 # Getting credentials
-from dotenv import load_dotenv
-import os
-
 load_dotenv(dotenv_path='./credentials.env')
 #YOU NEED TO CHANGE THESE PARAMETERS IF YOU DO NOT STORE THEM IN A CREDENTIALS.ENV FILE
 email = os.getenv('email')
 password = os.getenv('password')
 vikar_id = os.getenv('vikar_id')
 
-registration_url = event_url + f'&leggtilvikarid={vikar_id}'
-
-
-
 
 
 # Logging in
-import requests
-
 s = requests.Session()
 
 home_url = "https://www.ntnuitennis.no/index.php?lang=no"
@@ -34,15 +32,8 @@ login_values = {'email': email,
 r = s.post(url=home_url, data=login_values)
 
 
-
-
-
 # Signing up
-from urllib.parse import urlparse, parse_qs
-from dateutil.parser import parse
-from datetime import timedelta
-import time
-import pytz
+registration_url = event_url + f'&leggtilvikarid={vikar_id}'
 
 event_time = parse(parse_qs(urlparse(event_url).query)['spilletid'][0])
 registration_time = event_time - timedelta(hours=72)
