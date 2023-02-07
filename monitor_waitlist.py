@@ -1,5 +1,5 @@
 # URL of event you want to sign up to
-event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=233&spilletid=20230205T15:00:00&lang=no'
+event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=116&spilletid=20230209T19:00:00&lang=no'
 
 
 
@@ -7,7 +7,7 @@ event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=233&spilletid=202302
 from dotenv import load_dotenv
 import os
 
-load_dotenv(dotenv_path='./abhi_credentials.env')
+load_dotenv(dotenv_path='./kenneth_credentials.env')
 #YOU NEED TO CHANGE THESE PARAMETERS IF YOU DO NOT STORE THEM IN A CREDENTIALS.ENV FILE
 email = os.getenv('email')
 password = os.getenv('password')

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Autotennis</title>
+</head>
+<body>
+
+    <style>
+        .hide { position:absolute; top:-1px; left:-1px; width:1px; height:1px; }
+    </style>
+
+    <iframe name="hiddenFrame" class="hide"></iframe>
+
+
+    <h1>Autotennis</h1>
+    <br>
+    <p>Steg 1: Registrer bruker(kun første gang du bruker formen)</p>
+
+    <form name="user_form" method="post" action="./submit_user.py" target="hiddenFrame">
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <label for="password">Passord:</label><br>
+        <input type="text" id="passord" name="passord"><br>    
+        <label for="vikar_id">Vikar ID:</label><br>
+        <input type="text" id="vikar_id" name="vikar_id"><br><br>
+        <input type="submit" value="Registrer bruker">
+    </form>
+    <br>
+    <br>
+
+    <p>Steg 2: Skriv inn email og link til økta du ønsker å delta på:)</p>
+
+    <form name="event_form" method="post" action="./submit_event.py">
+        <label for="url">URL:</label><br>
+        <input type="text" id="url" name="url"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br><br>
+        <input type="submit" value="Meld på">
+</form>
+
+</body>
+</html>
