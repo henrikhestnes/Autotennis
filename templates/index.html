@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 <head>
 <title>Autotennis</title>
 </head>
 <body>
 
     <h1>Autotennis</h1>
-    <br>
-    <p>Steg 1: Registrer bruker(kun første gang du bruker formen)</p>
-
+    <h3>Registrer bruker(kun første gang du bruker formen)</h3>
     <form name="user_form" method="post" action="submit_user">
         <label for="email">Email:</label><br>
         <input type="text" id="email" name="email"><br>
@@ -22,15 +20,25 @@
     <br>
     <br>
 
-    <p>Steg 2: Skriv inn email og link til økta du ønsker å delta på:)</p>
-
+    <h3>Skriv inn email og link til økta du ønsker å delta på:)</h3>
     <form name="event_form" method="post" action="submit_event">
         <label for="url">URL:</label><br>
         <input type="text" id="url" name="url"><br>
         <label for="email">Email:</label><br>
         <input type="text" id="email" name="email"><br><br>
         <input type="submit" value="Meld på">
-</form>
+    </form>
+    <br>
+    <br>
+
+    <h3>For sent ute? Frykt ikke! Skriv inn email og link og du vil bli meldt på dersom det blir ledig plass:)</h3>
+    <form name="event_form" method="post" action="submit_waitlist">
+        <label for="url">URL:</label><br>
+        <input type="text" id="url" name="url"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br><br>
+        <input type="submit" value="Sett på venteliste">
+    </form>
 
 </body>
 </html>
