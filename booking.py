@@ -17,23 +17,22 @@ def schedule_booking(email, event_url):
     user = database.get_entry(email)
     log_in(user, s)
 
-    # Signing up
     registration_url = get_registration_url(event_url, user['vikar_id'])
 
     event_time = parse(parse_qs(urlparse(event_url).query)['spilletid'][0])
     registration_time = event_time - timedelta(hours=72)
     utc_registration_time = registration_time.astimezone(pytz.UTC)
 
-
-    print("BOOKING")
     response = s.get(event_url)
     time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
-    while time_diff > 3:
+    while time_diff > 5:
         response = s.get(event_url)
         time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         time.sleep(time_diff/2)
 
+
     response = s.get(registration_url)
+    print(confirmation_str in response.text)
     while confirmation_str not in response.text:
         time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         if time_diff < -60:

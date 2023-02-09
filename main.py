@@ -4,8 +4,6 @@ import database
 import booking
 
 app = Flask(__name__)
-# app.debug = True
-# app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 @app.route('/', methods=['POST', 'GET'])
 def frontpage():
