@@ -1,44 +1,75 @@
 <!DOCTYPE html>
 <html>
-<meta charset="UTF-8">
-<head>
-<title>Autotennis</title>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/autotennis.css" />
 
-    <h1>Autotennis</h1>
-    <h3>Registrer bruker(kun første gang du bruker formen)</h3>
-    <form name="user_form" method="post" action="submit_user">
-        <label for="email">Email:</label><br>
-        <input type="text" id="email" name="email"><br>
-        <label for="password">Passord:</label><br>
-        <input type="text" id="password" name="password"><br>    
-        <label for="vikar_id">Vikar ID:</label><br>
-        <input type="text" id="vikar_id" name="vikar_id"><br><br>
-        <input type="submit" value="Registrer bruker">
-    </form>
-    <br>
-    <br>
+<body id ="body">
+
+
+
+    <h1 >Autotennis</h1>
+    
+    
+    
+    <div class="Registrering">
+        <h3 >Registrer bruker(kun første gang du bruker formen)</h3>
+            <form name="user_form" method="post" action="submit_user">
+            <label for="email" style="color:#184E77 ;">Email:</label><br>
+            <input type="text" id="email" name="email" required><br>
+            <label for="password"style="color:#184E77 ;">Passord:</label><br>
+            <input type="text" id="password" name="password" required><br>    
+            <label for="vikar_id"style="color:#184E77 ;">Vikar ID:</label><br>
+            <input type="text" id="vikar_id" name="vikar_id" required><br><br>
+            <input type="submit" value="Registrer bruker">
+           
+        </form>
+        <br>
+        <br>
+  
+    </div> 
+    <img src="/static/duo.jpg" alt="Drømmeduo"style="border-radius: 50%;float:right;width: 230px;;height: 300px;;">
+    <img src="/static/barneskirenn.jpg" alt="Barneskirenn" style="border-radius: 50%;float:left;width: 230px;;height: 300px;;">
+
+    <div class="Deltagelse">
 
     <h3>Skriv inn email og link til økta du ønsker å delta på:)</h3>
     <form name="event_form" method="post" action="submit_event">
-        <label for="url">URL:</label><br>
-        <input type="text" id="url" name="url"><br>
-        <label for="email">Email:</label><br>
-        <input type="text" id="email" name="email"><br><br>
+        <label for="url"style="color:#184E77 ;">URL:</label><br>
+        <input type="text" id="url" name="url" required><br>
+        <label for="email"style="color:#184E77 ;">Email:</label><br>
+        <input type="text" id="email" name="email" required><br><br>
         <input type="submit" value="Meld på">
     </form>
     <br>
     <br>
-
+</div> 
+<div class="sent_ute">
     <h3>For sent ute? Frykt ikke! Skriv inn email og link og du vil bli meldt på dersom det blir ledig plass:)</h3>
     <form name="event_form" method="post" action="submit_waitlist">
-        <label for="url">URL:</label><br>
-        <input type="text" id="url" name="url"><br>
-        <label for="email">Email:</label><br>
-        <input type="text" id="email" name="email"><br><br>
-        <input type="submit" value="Sett på venteliste">
+        <label for="url"style="color:#184E77 ;">URL:</label><br>
+        <input type="text" id="url" name="url" required><br>
+        <label for="email"style="color:#184E77 ;">Email:</label><br>
+        <input type="text" id="email" name="email" required><br><br>
+        <input type="submit" value="Sett på venteliste" >
     </form>
+</div> 
+
+<div class="musikk"></div>
+    <h3 >Hør på litt musikk mens du registrer deg :)</h3>
+    <p align="center"> <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+</div> 
+<div id="credits">
+    <p>Alt annet: Henrik Larsson Hestnes, Kontakt: <a href="https://www.linkedin.com/in/henrikhestnes/">Linkdin</a> </p>
+    <p>Design: Abhisaran Labilé Karunananthan, Kontakt: <a href="https://www.linkedin.com/in/abhisarankarunananthan/">Linkdin</a></p>
+</div>
+<div id="registered_users">
+    <h3>Registrerte brukere:</h3>
+    {% for email in registered_emails %}
+        <tr>
+            <td>{{email}}</td><br>
+        </tr>
+    {% endfor %}
+</div>
 
 </body>
 </html>

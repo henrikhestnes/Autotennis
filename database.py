@@ -23,3 +23,6 @@ def update(email, password, vikar_id):
 
 def get_entry(email):
     return db.search(User.email == email)[0]
+
+def get_registered_emails():
+    return [user['email'] for user in db]

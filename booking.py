@@ -14,31 +14,47 @@ def schedule_booking(email, event_url):
     if not is_valid_url(event_url, s):
         return
     
-    user = database.get_entry(email)
+    try:
+        user = database.get_entry(email)
+    except:
+        print(f"{email} not in database")
+        return
+    
     log_in(user, s)
 
     registration_url = get_registration_url(event_url, user['vikar_id'])
 
     event_time = parse(parse_qs(urlparse(event_url).query)['spilletid'][0])
+    event_timezone = pytz.timezone("Europe/Oslo")
+    event_time = event_timezone.localize(event_time)
     registration_time = event_time - timedelta(hours=72)
     utc_registration_time = registration_time.astimezone(pytz.UTC)
 
     response = s.get(event_url)
     time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
+
     while time_diff > 5:
         response = s.get(event_url)
         time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
+        print(f"{user['email']} for {event_time} sleeping {time_diff/2} seconds")
         time.sleep(time_diff/2)
 
 
     response = s.get(registration_url)
-    print(confirmation_str in response.text)
     while confirmation_str not in response.text:
         time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         if time_diff < -60:
             break
         time.sleep(0.05) #0.05 second sleep to avoid ddos
         response = s.get(registration_url)
+    
+    if confirmation_str in response.text:
+        print(f"SIGNED UP {user['email']}")
+    else:
+        print(f"NOT SIGNED UP {user['email']}")
+    
+    print(f"{email} FOR {event_time} EXITING")
+
 
 
 def monitor_full_event(email, event_url):
@@ -47,7 +63,12 @@ def monitor_full_event(email, event_url):
     if not is_valid_url(event_url, s):
         return
 
-    user = database.get_entry(email)
+    try:
+        user = database.get_entry(email)
+    except:
+        print(f"{email} not in database")
+        return
+    
     log_in(user, s)
 
     registration_url = get_registration_url(event_url, user['vikar_id'])

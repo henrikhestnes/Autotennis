@@ -1,0 +1,81 @@
+
+ #body{
+    background-color: #34A0A4
+    ;
+ }
+
+
+ .Deltagelse{
+   margin: auto;
+   width: 50%;
+   border: 3px solid #99D98C;
+   padding: 10px;
+   text-align: center;  
+  background-color: #52B69A;
+
+ }
+
+
+ .Registrering{
+   margin: auto;
+   width: 50%;
+   border: 3px solid #99D98C;
+   padding: 10px;
+   text-align: center;  
+  background-color: #52B69A;
+ }
+
+ .sent_ute{
+   margin: auto;
+   width: 50%;
+   border: 3px solid #99D98C;
+   padding: 10px;
+   text-align: center;  
+  background-color: #52B69A;
+ }
+
+
+  h1 {
+   width:500px;
+   margin: 0 auto;
+   text-align: center;
+   color: #184E77;
+
+}
+h3 {
+   width:500px;
+   margin: 0 auto;
+   text-align: center;
+   color: #184E77;
+}
+
+input[type="submit"] {
+   border-radius: 12px;
+   color: #184E77;
+   background-color: #99D98C;
+   border: 3px solid #99D98C;
+ }
+
+ #credits {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: auto; 
+  border: 3px solid #99D98C;
+  padding: 10px;
+ background-color: #52B69A;
+ font-size: 12px;
+
+}
+
+#registered_users {
+   position: fixed;
+   bottom: 0;
+   right: 0;
+   margin: auto; 
+   border: 3px solid #99D98C;
+   padding: 10px;
+  background-color: #52B69A;
+  font-size: 12px;
+ 
+ }
