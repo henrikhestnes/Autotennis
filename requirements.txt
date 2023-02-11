@@ -5,13 +5,9 @@ tinydb==4.7.1
 requests==2.28.1
 idna<4,>=2.5
 certifi>=2017.4.17
-urllib3<1.27,>=1.21.1
 charset-normalizer<3,>=2
 python-time
 pytz
 datetime
 urllib3
 python-dateutil
-tinydb-appengine
-google-cloud-storage
-appengine-python-standard>=1.0.0

@@ -6,7 +6,7 @@ from tinydb_appengine.storages import EphemeralJSONStorage
 # bucket = storage_client.bucket("user_bucket")
 # blob = bucket.blob("user_blob")
 
-db = TinyDB("./userDB.json", storage=EphemeralJSONStorage)
+db = TinyDB("./userDB.json")#, storage=EphemeralJSONStorage)
 User = Query()
 
 def is_in_db(email):

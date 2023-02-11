@@ -27,8 +27,6 @@ def submit_event():
     url = request.form.get('url')
     t = threading.Thread(target=booking.schedule_booking, args=(email, url))
     t.start()
-    # t = google.appengine.api.background_thread.start_new_background_thread(target=booking.schedule_booking, args=(email, url))
-    # t.start()
     return render_template('index.html', registered_emails=database.get_registered_emails())
 
 @app.route('/submit_waitlist', methods=['POST'])
@@ -37,8 +35,6 @@ def submit_waitlist():
     url = request.form.get('url')
     t = threading.Thread(target=booking.monitor_full_event, args=(email, url))
     t.start()
-    # t = google.appengine.api.background_thread.start_new_background_thread(target=booking.monitor_full_event, args=(email, url))
-    # t.start()
     return render_template('index.html', registered_emails=database.get_registered_emails())
 
 
