@@ -11,3 +11,4 @@ pytz
 datetime
 urllib3
 python-dateutil
+google-cloud-storage

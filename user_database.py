@@ -1,12 +1,14 @@
 from tinydb import TinyDB, Query
-from tinydb_appengine.storages import EphemeralJSONStorage
-# from google.cloud import storage
 
-# storage_client = storage.Client()
-# bucket = storage_client.bucket("user_bucket")
-# blob = bucket.blob("user_blob")
+from google.cloud import storage
 
-db = TinyDB("./userDB.json")#, storage=EphemeralJSONStorage)
+storage_client = storage.Client()
+
+bucket_name = "autotennis"
+
+bucket = storage_client.get_bucket(bucket_name)
+
+db = TinyDB("./userDB.json")
 User = Query()
 
 def is_in_db(email):

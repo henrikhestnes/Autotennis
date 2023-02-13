@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request
 import threading
-import database
-import booking
+
+import user_database
+import booking_database
+import fsm
+
 
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def frontpage():
-    return render_template('index.html', registered_emails=database.get_registered_emails())
+    return render_template('index.html', registered_emails=user_database.get_registered_emails())
 
 @app.route('/submit_user', methods=['POST'])
 def submit_user():
@@ -15,28 +18,28 @@ def submit_user():
     password = request.form.get('password')
     vikar_id = request.form.get('vikar_id')
     print(f'ADDING {email} TO DATABASE')
-    if database.is_in_db(email):
-        database.update(email, password, vikar_id)
+    if user_database.is_in_db(email):
+        user_database.update(email, password, vikar_id)
     else:
-        database.add_entry(email, password, vikar_id)
-    return render_template('index.html', registered_emails=database.get_registered_emails())
+        user_database.add_entry(email, password, vikar_id)
+    return render_template('index.html', registered_emails=user_database.get_registered_emails())
 
 @app.route('/submit_event', methods=['POST'])
 def submit_event():
     email = request.form.get('email')
     url = request.form.get('url')
-    t = threading.Thread(target=booking.schedule_booking, args=(email, url))
-    t.start()
-    return render_template('index.html', registered_emails=database.get_registered_emails())
+    booking_database.add_entry(email, url)
+    return render_template('index.html', registered_emails=user_database.get_registered_emails())
 
 @app.route('/submit_waitlist', methods=['POST'])
 def submit_waitlist():
     email = request.form.get('email')
     url = request.form.get('url')
-    t = threading.Thread(target=booking.monitor_full_event, args=(email, url))
-    t.start()
-    return render_template('index.html', registered_emails=database.get_registered_emails())
+    #TODO: Implement
+    return render_template('index.html', registered_emails=user_database.get_registered_emails())
 
 
 if __name__ == "__main__":
-    app.run()
+    t = threading.Thread(target=fsm.start)
+    t.start()
+    app.run(debug=True)

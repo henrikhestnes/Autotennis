@@ -3,7 +3,7 @@ import time, pytz
 from datetime import timedelta
 from urllib.parse import urlparse, parse_qs
 from dateutil.parser import parse
-import database
+import user_database
 
 confirmation_str = "Kode for tilgang til bygget:"
 
@@ -15,7 +15,7 @@ def schedule_booking(email, event_url):
         return
     
     try:
-        user = database.get_entry(email)
+        user = user_database.get_entry(email)
     except:
         print(f"{email} not in database")
         return
@@ -64,7 +64,7 @@ def monitor_full_event(email, event_url):
         return
 
     try:
-        user = database.get_entry(email)
+        user = user_database.get_entry(email)
     except:
         print(f"{email} not in database")
         return
