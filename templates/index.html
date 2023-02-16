@@ -2,13 +2,12 @@
 <html>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/autotennis.css" />
+    <link rel="icon" type="image/ico" href="../static/favicon.ico">
 
 <body id ="body">
 
 
-
     <h1 >Autotennis</h1>
-    
     
     
     <div class="Registrering">
@@ -44,7 +43,7 @@
     <br>
 </div> 
 <div class="sent_ute">
-    <h3>For sent ute? Frykt ikke! Skriv inn email og link og du vil bli meldt på dersom det blir ledig plass:)(ikke implementert)</h3>
+    <h3>For sent ute? Frykt ikke! Skriv inn email og link og du vil bli meldt på dersom det blir ledig plass:)</h3>
     <form name="event_form" method="post" action="submit_waitlist">
         <label for="url"style="color:#184E77 ;">URL:</label><br>
         <input type="text" id="url" name="url" required><br>
@@ -63,10 +62,16 @@
     <p>Design: Abhisaran Labilé Karunananthan, Kontakt: <a href="https://www.linkedin.com/in/abhisarankarunananthan/">Linkdin</a></p>
 </div>
 <div id="registered_users">
-    <h3>Registrerte brukere:</h3>
-    {% for email in registered_emails %}
+    <h3>Aktive bookinger:</h3>
+    {% for email, bookings in active_bookings.items() %}
         <tr>
             <td>{{email}}</td><br>
+            {% for booking in bookings %}
+                <tr>
+                    <td>&nbsp &nbsp {{booking}}</td><br>
+                </tr>
+            {% endfor %}
+
         </tr>
     {% endfor %}
 </div>

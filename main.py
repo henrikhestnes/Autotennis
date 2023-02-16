@@ -1,16 +1,18 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import threading
 
 import user_database
 import booking_database
-import fsm
+import booking
 
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['POST', 'GET'])
 def frontpage():
-    return render_template('index.html', registered_emails=user_database.get_registered_emails())
+    return render_template('index.html', active_bookings=booking_database.get_active_bookings_per_user())
+
 
 @app.route('/submit_user', methods=['POST'])
 def submit_user():
@@ -22,24 +24,34 @@ def submit_user():
         user_database.update(email, password, vikar_id)
     else:
         user_database.add_entry(email, password, vikar_id)
-    return render_template('index.html', registered_emails=user_database.get_registered_emails())
+    return redirect('/')
+
 
 @app.route('/submit_event', methods=['POST'])
 def submit_event():
     email = request.form.get('email')
     url = request.form.get('url')
-    booking_database.add_entry(email, url)
-    return render_template('index.html', registered_emails=user_database.get_registered_emails())
+    if not booking_database.is_in_db(email, url):
+        booking_database.add_entry(email, url, "schedule")
+        t = threading.Thread(target=booking.book, args=(email, url))
+        t.start()
+    return redirect('/')
+
 
 @app.route('/submit_waitlist', methods=['POST'])
 def submit_waitlist():
     email = request.form.get('email')
     url = request.form.get('url')
-    #TODO: Implement
-    return render_template('index.html', registered_emails=user_database.get_registered_emails())
+    if not booking_database.is_in_db(email, url):
+        booking_database.add_entry(email, url, "monitor")
+        t = threading.Thread(target=booking.book, args=(email, url))
+        t.start()
+    return redirect('/')
 
+print("BOOTING")
+user_database.boot()
+booking_database.boot()
+booking.boot()
 
 if __name__ == "__main__":
-    t = threading.Thread(target=fsm.start)
-    t.start()
-    app.run(debug=True)
+    app.run()

@@ -1,34 +1,43 @@
 from tinydb import TinyDB, Query
-import pytz
-from datetime import timedelta
-from urllib.parse import urlparse, parse_qs
-from dateutil.parser import parse
+from google.cloud import storage
+
+import user_database
+
+storage_client = storage.Client()
+bucket_name = "autotennis"
+bucket = storage_client.bucket(bucket_name)
+blob = bucket.blob("bookings")
 
 db = TinyDB("./bookingDB.json")
 Booking = Query()
 
-def add_entry(email, event_url):
-    
-    event_time = parse(parse_qs(urlparse(event_url).query)['spilletid'][0])
-    event_timezone = pytz.timezone("Europe/Oslo")
-    event_time = event_timezone.localize(event_time)
-    registration_time = event_time - timedelta(hours=72)
-    utc_registration_time = registration_time.astimezone(pytz.UTC)
-    db.insert({'email': email, "utc_registration_time": utc_registration_time ,'event_url': event_url})
+def boot():
+    blob.download_to_filename("./bookingDB.json")
+
+def is_in_db(email, event_url):
+    blob.download_to_filename("./bookingDB.json")
+    if db.search(Booking.email == email and Booking.event_url == event_url) == []:
+        return False
+    else:
+        return True
+
+def add_entry(email, event_url, type):
+    blob.download_to_filename("./bookingDB.json")
+    db.insert({'email': email, 'event_url': event_url, 'type': type})
+    blob.upload_from_filename('./bookingDB.json')
 
 def remove_entry(email, event_url):
+    blob.download_to_filename("./bookingDB.json")
     db.remove(Booking.email == email and Booking.event_url == event_url)
+    blob.upload_from_filename('./bookingDB.json')
 
 def get_all_entries():
-    return db
+    blob.download_to_filename("./bookingDB.json")
+    return db.all()
 
-
-#HELPER FUNCTIONS
-def is_valid_url(event_url, session):
-    r = session.get(event_url)
-    if 'ERROR' in r.text:
-        return False
-    return True
-
-def time_diff_seconds(time_a, time_b):
-    return (time_a - time_b).total_seconds()
+def get_active_bookings_per_user():
+    blob.download_to_filename("./bookingDB.json")
+    active_bookings = {user: [] for user in user_database.get_registered_emails()}
+    for booking in get_all_entries():
+        active_bookings[booking['email']].append(booking['event_url'])
+    return active_bookings
