@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect
 import threading
+import logging
 
 import user_database
 import booking_database
 import booking
+import custom_logging
 
 
 app = Flask(__name__)
@@ -19,7 +21,7 @@ def submit_user():
     email = request.form.get('email')
     password = request.form.get('password')
     vikar_id = request.form.get('vikar_id')
-    print(f'ADDING {email} TO DATABASE')
+    custom_logging.info(f'ADDING {email} TO DATABASE')
     if user_database.is_in_db(email):
         user_database.update(email, password, vikar_id)
     else:
@@ -48,7 +50,7 @@ def submit_waitlist():
         t.start()
     return redirect('/')
 
-print("BOOTING")
+custom_logging.info("BOOTING")
 user_database.boot()
 booking_database.boot()
 booking.boot()

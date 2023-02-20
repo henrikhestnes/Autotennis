@@ -62,13 +62,13 @@
     <p>Design: Abhisaran Labilé Karunananthan, Kontakt: <a href="https://www.linkedin.com/in/abhisarankarunananthan/">Linkdin</a></p>
 </div>
 <div id="registered_users">
-    <h3>Aktive bookinger:</h3>
+    <h3>Aktive bookinger</h3>
     {% for email, bookings in active_bookings.items() %}
         <tr>
-            <td>{{email}}</td><br>
+            <td><strong>{{email}}</strong></td><br>
             {% for booking in bookings %}
                 <tr>
-                    <td>&nbsp &nbsp {{booking}}</td><br>
+                    <td>&nbsp &nbsp &nbsp &nbsp {{booking}}</td><br>
                 </tr>
             {% endfor %}
 

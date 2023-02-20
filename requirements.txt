@@ -12,3 +12,4 @@ datetime
 urllib3
 python-dateutil
 google-cloud-storage
+google.cloud.logging

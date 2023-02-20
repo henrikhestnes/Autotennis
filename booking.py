@@ -4,8 +4,10 @@ import time, pytz
 from datetime import timedelta
 from urllib.parse import urlparse, parse_qs
 from dateutil.parser import parse
+
 import user_database
 import booking_database
+import custom_logging
 
 confirmation_str = "Kode for tilgang til bygget:"
 
@@ -15,7 +17,7 @@ def boot():
         event_url = booking['event_url']
         t = threading.Thread(target=book, args=(email, event_url))
         t.start()
-        print(f"RESTARTING THREAD {email} FOR {booking}")
+        custom_logging.info(f"RESTARTING THREAD {email} FOR {booking}")
 
 def book(email, event_url):
     if not sanity_check_good(email, event_url):
@@ -44,30 +46,32 @@ def book(email, event_url):
         monitor_full_event(email, registration_url, s)
 
     booking_database.remove_entry(email, event_url)
-    print(f"{email} FOR {event_time} EXITING")
+    custom_logging.info(f"{email} FOR {event_time} EXITING")
 
 
 def schedule_booking(email, event_url, registration_url, utc_registration_time, session):
     response = session.get(event_url)
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
+    
     while registration_time_diff > 5:
         response = session.get(event_url)
         registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
-        print(f"{email} for {utc_registration_time + timedelta(hours=72)} sleeping {registration_time_diff/2} seconds")
+        custom_logging.info(f"{email} for {utc_registration_time + timedelta(hours=72)} sleeping {registration_time_diff/2} seconds")
         time.sleep(registration_time_diff/2)
 
     response = session.get(registration_url)
+    i = 0
     while confirmation_str not in response.text:
         registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         if registration_time_diff < -60:
             break
-        time.sleep(0.05) #0.05 second sleep to avoid ddos
         response = session.get(registration_url)
+        i += 1
     
     if confirmation_str in response.text:
-        print(f"SIGNED UP {email}")
+        custom_logging.info(f"SIGNED UP {email} at {parse(response.headers['Date'])}, {i} attempts")
     else:
-        print(f"NOT SIGNED UP {email}")
+        custom_logging.info(f"NOT SIGNED UP {email}, {i} attempts")
     
 
 
@@ -75,8 +79,13 @@ def monitor_full_event(email, registration_url, session):
     event_time_utc = parse(parse_qs(urlparse(registration_url).query)['spilletid'][0]).astimezone(pytz.UTC)
 
     response = session.get(registration_url)
+    i = 0
     while confirmation_str not in response.text:
-        print(f"{email} for {registration_url} monitoring waitlist")
+        if i % 20 == 0: #Every 10 minute
+            custom_logging.info(f"{email} for {registration_url} monitoring waitlist")
+            i = 0
+        i += 1
+
         time_diff = time_diff_seconds(event_time_utc, parse(response.headers['Date']))
         if time_diff < 0:
             break
@@ -84,18 +93,18 @@ def monitor_full_event(email, registration_url, session):
         response = session.get(registration_url)
 
     if confirmation_str in response.text:
-        print(f"SIGNED UP {email}")
+        custom_logging.info(f"SIGNED UP {email} at {parse(response.headers['Date'])}")
     else:
-        print(f"NOT SIGNED UP {email}")
+        custom_logging.info(f"NOT SIGNED UP {email}")
 
 
 # HELPER FUNCTIONS
 def sanity_check_good(email, event_url):
     if not user_database.is_in_db(email):
-        print(f"{email} not in database")
+        custom_logging.info(f"{email} not in database")
         return False
     if not is_valid_url(event_url):
-        print(f"Invalid URL: {event_url}")
+        custom_logging.info(f"Invalid URL: {event_url}")
         return False
     return True
 
