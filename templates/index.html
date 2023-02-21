@@ -36,7 +36,9 @@
         <label for="url"style="color:#184E77 ;">URL:</label><br>
         <input type="text" id="url" name="url" required><br>
         <label for="email"style="color:#184E77 ;">Email:</label><br>
-        <input type="text" id="email" name="email" required><br><br>
+        <input type="text" id="email" name="email" required><br>
+        <input type="checkbox" id="recurring" name="recurring" value="recurring">
+        <label for="recurring"> Gjenta påmelding ukentlig?</label><br>
         <input type="submit" value="Meld på">
     </form>
     <br>
@@ -51,8 +53,13 @@
         <input type="text" id="email" name="email" required><br><br>
         <input type="submit" value="Sett på venteliste" >
     </form>
-</div> 
+</div>
 
+<div class="sent_ute">
+    <h3>NB: URL må være på følgende format</h3>
+    <p>https://www.ntnuitennis.no/timeinfo.php?timeid=XX&spilletid=XXX&lang=XX</p>
+</div>
+<br>
 <div class="musikk"></div>
     <h3 >Hør på litt musikk mens du registrer deg :)</h3>
     <p align="center"> <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>

@@ -1,0 +1,38 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    client.knative.dev/user-image: europe-north1-docker.pkg.dev/autotennis/cloud-run-source-deploy/autotennis
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    run.googleapis.com/operation-id: 5846ae38-e361-46fa-b235-200716c64422
+  labels:
+    cloud.googleapis.com/location: europe-north1
+  name: autotennis
+  namespace: '815999600375'
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '100'
+        autoscaling.knative.dev/minScale: '1'
+        client.knative.dev/user-image: europe-north1-docker.pkg.dev/autotennis/cloud-run-source-deploy/autotennis
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 417.0.1
+      name: autotennis-00017-wuc
+    spec:
+      containerConcurrency: 80
+      containers:
+      - image: europe-north1-docker.pkg.dev/autotennis/cloud-run-source-deploy/autotennis@sha256:6ef7547b05dffd20a1bed075b8922137d4de75758cb44ed234b3f0d325281bf5
+        ports:
+        - containerPort: 8080
+          name: http1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+      serviceAccountName: 815999600375-compute@developer.gserviceaccount.com
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100

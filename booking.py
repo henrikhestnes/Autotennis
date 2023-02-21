@@ -22,6 +22,7 @@ def boot():
 def book(email, event_url):
     if not sanity_check_good(email, event_url):
         booking_database.remove_entry(email, event_url)
+        custom_logging.info(f"INVALID URL: {event_url}")
         return
     
     s = requests.Session()
@@ -61,10 +62,9 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
 
     response = session.get(registration_url)
     i = 0
-    while confirmation_str not in response.text:
-        registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
-        if registration_time_diff < -60:
-            break
+    while registration_time_diff > -10:
+        if i % 10 == 0:
+            registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         response = session.get(registration_url)
         i += 1
     
@@ -122,8 +122,18 @@ def get_registration_url(event_url, vikar_id):
     return event_url + f'&leggtilvikarid={vikar_id}'
 
 def is_valid_url(event_url):
-    if "www.ntnuitennis.no" not in event_url:
+    url_parsed = urlparse(event_url)
+    query = parse_qs(url_parsed.query)
+    if url_parsed.netloc != 'www.ntnuitennis.no':
         return False
+    required_query = ['timeid', 'spilletid']
+    for q in required_query:
+        if q not in query.keys():
+            return False
+    allowed_query = ['timeid', 'spilletid', 'lang']
+    for q in query:
+        if q not in allowed_query:
+            return False
     return True
 
 def time_diff_seconds(time_a, time_b):

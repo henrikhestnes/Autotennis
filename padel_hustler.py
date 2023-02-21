@@ -9,7 +9,7 @@ import pytz
 
 
 # URL of event you want to sign up to
-event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=105&spilletid=20230222T18:00:00&lang=no'
+event_url = 'https://www.ntnuitennis.no/timeinfo.php?timeid=65&spilletid=20230221T15:00:00&lang=no'
 
 
 # Getting credentials
