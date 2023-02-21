@@ -33,27 +33,35 @@ def submit_user():
 def submit_event():
     email = request.form.get('email')
     url = request.form.get('url')
+    recurring = bool(request.form.get('recurring'))
     if not booking_database.is_in_db(email, url):
-        booking_database.add_entry(email, url, "schedule")
+        booking_database.add_entry(email, url, recurring,"schedule")
         t = threading.Thread(target=booking.book, args=(email, url))
         t.start()
     return redirect('/')
 
+@app.route('/remove_recurring', methods=['POST'])
+def remove_recurring():
+    email = request.form.get('email')
+    url = request.form.get('url')
+    if booking_database.is_in_db(email, url):
+        booking_database.remove_entry(email, url)
+    return redirect('/')
 
 @app.route('/submit_waitlist', methods=['POST'])
 def submit_waitlist():
     email = request.form.get('email')
     url = request.form.get('url')
     if not booking_database.is_in_db(email, url):
-        booking_database.add_entry(email, url, "monitor")
+        booking_database.add_entry(email, url, False, "monitor")
         t = threading.Thread(target=booking.book, args=(email, url))
         t.start()
     return redirect('/')
 
 custom_logging.info("BOOTING")
-user_database.boot()
-booking_database.boot()
+user_database.sync()
+booking_database.sync()
 booking.boot()
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

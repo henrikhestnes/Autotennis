@@ -2,7 +2,7 @@ import requests
 import threading
 import time, pytz
 from datetime import timedelta
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from dateutil.parser import parse
 
 import user_database
@@ -46,7 +46,26 @@ def book(email, event_url):
     else:
         monitor_full_event(email, registration_url, s)
 
-    booking_database.remove_entry(email, event_url)
+    if booking_database.is_recurring(email, event_url):
+        custom_logging.info(f"RECURRING {email} FOR {event_url}")
+        url_parsed = urlparse(event_url)
+        query = parse_qs(url_parsed.query)
+        event_time = parse(query['spilletid'][0])
+        new_event_time = event_time + timedelta(weeks=1)
+        query['spilletid'] = [new_event_time.strftime('%Y%m%dT%H:%M:%S')]
+        new_query = urlencode(query, doseq=True)
+        new_event_url = urlunparse(url_parsed._replace(query=new_query)).replace("%3A", ":")
+
+        booking_database.remove_entry(email, event_url)
+        booking_database.add_entry(email, new_event_url, True, "schedule")
+
+        book(email, new_event_url)
+        
+    try:
+        booking_database.remove_entry(email, event_url)
+    except:
+        custom_logging.info(f"COULD NOT REMOVE {email} FOR {event_url}, ALREADY REMOVED")
+
     custom_logging.info(f"{email} FOR {event_time} EXITING")
 
 

@@ -22,9 +22,6 @@
             <input type="submit" value="Registrer bruker">
            
         </form>
-        <br>
-        <br>
-  
     </div> 
     <img src="/static/duo.jpg" alt="Drømmeduo"style="border-radius: 50%;float:right;width: 230px;;height: 300px;;">
     <img src="/static/barneskirenn.jpg" alt="Barneskirenn" style="border-radius: 50%;float:left;width: 230px;;height: 300px;;">
@@ -38,12 +35,20 @@
         <label for="email"style="color:#184E77 ;">Email:</label><br>
         <input type="text" id="email" name="email" required><br>
         <input type="checkbox" id="recurring" name="recurring" value="recurring">
-        <label for="recurring"> Gjenta påmelding ukentlig?</label><br>
+        <label for="recurring"> Gjenta påmelding ukentlig?</label><br><br>
         <input type="submit" value="Meld på">
     </form>
-    <br>
-    <br>
 </div> 
+<div class="sent_ute">
+    <h3>Ønsker du å fjerne gjentagende påmelding?(NB: du vil fortsatt bli påmeldt neste økt)</h3>
+    <form name="event_form" method="post" action="remove_recurring">
+        <label for="url"style="color:#184E77 ;">URL:</label><br>
+        <input type="text" id="url" name="url" required><br>
+        <label for="email"style="color:#184E77 ;">Email:</label><br>
+        <input type="text" id="email" name="email" required><br><br>
+        <input type="submit" value="Fjern gjentagende påmelding">
+    </form>
+</div>
 <div class="sent_ute">
     <h3>For sent ute? Frykt ikke! Skriv inn email og link og du vil bli meldt på dersom det blir ledig plass:)</h3>
     <form name="event_form" method="post" action="submit_waitlist">
@@ -56,7 +61,7 @@
 </div>
 
 <div class="sent_ute">
-    <h3>NB: URL må være på følgende format</h3>
+    <h3>NB: URLen må være på følgende format</h3>
     <p>https://www.ntnuitennis.no/timeinfo.php?timeid=XX&spilletid=XXX&lang=XX</p>
 </div>
 <br>
