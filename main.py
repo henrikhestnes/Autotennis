@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect
 import threading
-import logging
 
 import user_database
 import booking_database
@@ -38,6 +37,8 @@ def submit_event():
         booking_database.add_entry(email, url, recurring,"schedule")
         t = threading.Thread(target=booking.book, args=(email, url))
         t.start()
+    else:
+        custom_logging.info(f'{email} for {url} ALREADY EXISTS')
     return redirect('/')
 
 @app.route('/remove_recurring', methods=['POST'])
@@ -64,4 +65,4 @@ booking_database.sync()
 booking.boot()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

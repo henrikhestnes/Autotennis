@@ -16,13 +16,13 @@ def sync():
     blob.download_to_filename("./bookingDB.json")
 
 def is_in_db(email, event_url):
-    if db.search(Booking.email == email and Booking.event_url == event_url) == []:
+    if db.search((Booking.email == email) & (Booking.event_url == event_url)) == []:
         return False
     else:
         return True
 
 def is_recurring(email, event_url):
-    if db.search(Booking.email == email and Booking.event_url == event_url and Booking.recurring == True) == []:
+    if db.search((Booking.email == email) & (Booking.event_url == event_url) & (Booking.recurring == True)) == []:
         return False
     else:
         return True
