@@ -1,9 +1,9 @@
 *.env
-*.json
 test.ipynb
 find_password.py
 credentials/
 __pycache__
 .pytest_cache
 userDB.json
+bookingDB.json
 env/
