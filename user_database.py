@@ -23,6 +23,7 @@ def is_in_db(email):
 
 def add_entry(email, password, vikar_id):
     if not is_valid_user(email, password):
+        print("Invalid user")
         custom_logging.info(f'Invalid user: {email}')
         return
     db.insert({'email': email, 'password': password, 'vikar_id': vikar_id})
@@ -50,7 +51,7 @@ def is_valid_user(email, password):
     s = requests.Session()
     r = s.post(url=homepage_url, data=login_values)
     
-    login_string = "Du er nå innlogget som"
+    login_string = "Du er n&aring; innlogget som"
     if login_string not in r.text:
         return False
     return True
