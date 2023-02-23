@@ -9,7 +9,8 @@ import user_database
 import booking_database
 import custom_logging
 
-confirmation_str = "Kode for tilgang til bygget:"
+confirmation_str_tennis = "Kode for tilgang til bygget:"
+confirmation_str_padel = "Bruk hovedinngangen, eller kode"
 
 def boot():
     for booking in booking_database.get_all_entries():
@@ -73,21 +74,22 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
     response = session.get(event_url)
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
     
-    while registration_time_diff > 5:
-        response = session.get(event_url)
-        registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
+    while registration_time_diff > 6:
         custom_logging.info(f"{email} for {utc_registration_time + timedelta(hours=72)} sleeping {registration_time_diff/2} seconds")
         time.sleep(registration_time_diff/2)
+        response = session.get(event_url)
+        registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
 
     response = session.get(registration_url)
     i = 0
     while registration_time_diff > -10:
         if i % 10 == 0:
             registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
+        time.sleep(0.02)
         response = session.get(registration_url)
         i += 1
     
-    if confirmation_str in response.text:
+    if confirmation_str_tennis in response.text or confirmation_str_padel in response.text:
         custom_logging.info(f"SIGNED UP {email} at {parse(response.headers['Date'])}, {i} attempts")
     else:
         custom_logging.info(f"NOT SIGNED UP {email}, {i} attempts")
@@ -99,7 +101,7 @@ def monitor_full_event(email, registration_url, session):
 
     response = session.get(registration_url)
     i = 0
-    while confirmation_str not in response.text:
+    while confirmation_str_tennis not in response.text or confirmation_str_padel not in response.text:
         if i % 20 == 0: #Every 10 minute
             custom_logging.info(f"{email} for {registration_url} monitoring waitlist")
             i = 0
@@ -111,7 +113,7 @@ def monitor_full_event(email, registration_url, session):
         time.sleep(30) #30 second sleep
         response = session.get(registration_url)
 
-    if confirmation_str in response.text:
+    if confirmation_str_tennis in response.text or confirmation_str_padel in response.text:
         custom_logging.info(f"SIGNED UP {email} at {parse(response.headers['Date'])}")
     else:
         custom_logging.info(f"NOT SIGNED UP {email}")
