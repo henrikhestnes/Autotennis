@@ -34,7 +34,7 @@ def add_entry(email, event_url, recurring, type):
     blob.upload_from_filename('./bookingDB.json')
 
 def remove_entry(email, event_url):
-    db.remove(Booking.email == email and Booking.event_url == event_url)
+    db.remove((Booking.email == email) & (Booking.event_url == event_url))
     blob.upload_from_filename('./bookingDB.json')
 
 def get_all_entries():

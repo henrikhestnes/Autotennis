@@ -34,7 +34,7 @@ def submit_event():
     url = request.form.get('url')
     recurring = bool(request.form.get('recurring'))
     if not booking_database.is_in_db(email, url):
-        booking_database.add_entry(email, url, recurring,"schedule")
+        booking_database.add_entry(email, url, recurring, "schedule")
         t = threading.Thread(target=booking.book, args=(email, url))
         t.start()
     else:

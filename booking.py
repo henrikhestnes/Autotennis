@@ -23,7 +23,6 @@ def boot():
 def book(email, event_url):
     if not sanity_check_good(email, event_url):
         booking_database.remove_entry(email, event_url)
-        custom_logging.info(f"INVALID URL: {event_url}")
         return
     
     s = requests.Session()
@@ -101,7 +100,7 @@ def monitor_full_event(email, registration_url, session):
 
     response = session.get(registration_url)
     i = 0
-    while confirmation_str_tennis not in response.text or confirmation_str_padel not in response.text:
+    while confirmation_str_tennis not in response.text and confirmation_str_padel not in response.text:
         if i % 20 == 0: #Every 10 minute
             custom_logging.info(f"{email} for {registration_url} monitoring waitlist")
             i = 0
