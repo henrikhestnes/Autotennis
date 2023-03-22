@@ -76,7 +76,7 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
     
     while registration_time_diff > 5:
-        custom_logging.info(f"{email} for {registration_url} sleeping {registration_time_diff/2} seconds")
+        custom_logging.info(f"{email} for {event_url} sleeping {registration_time_diff/2} seconds")
         time.sleep(registration_time_diff/2)
         response = session.get(event_url, headers=headers)
         registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
