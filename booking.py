@@ -75,7 +75,7 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
     response = session.get(event_url, headers=headers)
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
     
-    while registration_time_diff > 30:
+    while registration_time_diff > 5:
         custom_logging.info(f"{email} for {registration_url} sleeping {registration_time_diff/2} seconds")
         time.sleep(registration_time_diff/2)
         response = session.get(event_url, headers=headers)
@@ -83,10 +83,7 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
 
     response = session.get(registration_url, headers=headers)
     i = 0
-    while registration_time_diff > -30:
-        if i % 10 == 0:
-            registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
-        time.sleep(0.02)
+    while confirmation_str_tennis not in response.text and confirmation_str_padel not in response.text:
         response = session.get(registration_url, headers=headers)
         i += 1
     
