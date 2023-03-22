@@ -11,6 +11,8 @@ import custom_logging
 
 confirmation_str_tennis = "Kode for tilgang til bygget:"
 confirmation_str_padel = "Bruk hovedinngangen, eller kode"
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}
+
 
 def boot():
     for booking in booking_database.get_all_entries():
@@ -38,7 +40,7 @@ def book(email, event_url):
     registration_time = event_time - timedelta(hours=72)
     utc_registration_time = registration_time.astimezone(pytz.UTC)
 
-    response = s.get(event_url)
+    response = s.get(event_url, headers=headers)
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
 
     if registration_time_diff > 0:
@@ -70,22 +72,22 @@ def book(email, event_url):
 
 
 def schedule_booking(email, event_url, registration_url, utc_registration_time, session):
-    response = session.get(event_url)
+    response = session.get(event_url, headers=headers)
     registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
     
     while registration_time_diff > 6:
         custom_logging.info(f"{email} for {utc_registration_time + timedelta(hours=72)} sleeping {registration_time_diff/2} seconds")
         time.sleep(registration_time_diff/2)
-        response = session.get(event_url)
+        response = session.get(event_url, headers=headers)
         registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
 
-    response = session.get(registration_url)
+    response = session.get(registration_url, headers=headers)
     i = 0
     while registration_time_diff > -10:
         if i % 10 == 0:
             registration_time_diff = time_diff_seconds(utc_registration_time, parse(response.headers['Date']))
         time.sleep(0.02)
-        response = session.get(registration_url)
+        response = session.get(registration_url, headers=headers)
         i += 1
     
     if confirmation_str_tennis in response.text or confirmation_str_padel in response.text:
@@ -98,7 +100,7 @@ def schedule_booking(email, event_url, registration_url, utc_registration_time, 
 def monitor_full_event(email, registration_url, session):
     event_time_utc = parse(parse_qs(urlparse(registration_url).query)['spilletid'][0]).astimezone(pytz.UTC)
 
-    response = session.get(registration_url)
+    response = session.get(registration_url, headers=headers)
     i = 0
     while confirmation_str_tennis not in response.text and confirmation_str_padel not in response.text:
         if i % 20 == 0: #Every 10 minute
@@ -110,7 +112,7 @@ def monitor_full_event(email, registration_url, session):
         if time_diff < 0:
             break
         time.sleep(30) #30 second sleep
-        response = session.get(registration_url)
+        response = session.get(registration_url, headers=headers)
 
     if confirmation_str_tennis in response.text or confirmation_str_padel in response.text:
         custom_logging.info(f"SIGNED UP {email} at {parse(response.headers['Date'])}")
@@ -136,7 +138,7 @@ def log_in(user, session):
                     'lang': "no",
                     'rememberme': "on"}
     
-    session.post(url=homepage_url, data=login_values)
+    session.post(url=homepage_url, data=login_values, headers=headers)
 
 def get_registration_url(event_url, vikar_id):
     return event_url + f'&leggtilvikarid={vikar_id}'
